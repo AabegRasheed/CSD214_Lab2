@@ -1,0 +1,77 @@
+@startuml
+interface SaleableItem {
+    +sellCopy(): void
+    +getPrice(): double
+}
+
+abstract class Editable implements Serializable {
+    -input: Scanner
+    +getInput(s: String): String
+    +getInput(i: int): int
+    +getInput(d: double): double
+    +getInput(b: boolean): boolean
+    +getInput(date: Date): Date
+    +getInput(e: enum): enum
+    +edit(): abstract
+    +initialize(): abstract
+    +setSystemInput(testIn: ByteArrayInputStream)
+    +setSystemOutput(testOut: ByteArrayOutputStream)
+}
+
+abstract class Publication extends Editable implements SaleableItem {
+    -title: String
+    -price: double
+    -copies: int
+    -ISBN10: String
+    +Publication()
+    +Publication(title: String, price: double, copies: int, ISBN10: String)
+    +sellCopy(): void
+}
+
+class Book extends Publication {
+    -author: String
+    +Book()
+    +Book(author: String)
+    +Book(title: String, price: double, copies: int, author: String, ISBN10: String)
+}
+
+class Magazine extends Publication {
+    -orderQty: int
+    -currIssue: Date
+    +Magazine()
+    +Magazine(title: String, price: double, copies: int, orderQty: int, currIssue: Date)
+}
+
+class DiscMag extends Magazine {
+    -hasDisc: boolean
+    +DiscMag()
+    +DiscMag(hasDisc: boolean)
+    +DiscMag(title: String, price: double, copies: int, hasDisc: boolean, orderQty: int, currIssue: Date)
+}
+
+class Ticket extends Editable implements SaleableItem, Serializable {
+    -description: String
+    -price: double
+    +Ticket(description: String, price: double)
+}
+
+class Pencil implements SaleableItem {
+    -price: double
+    +Pencil(price: double)
+    +sellCopy(): void
+    +getPrice(): double
+}
+
+class CashTill {
+    -runningTotal: double
+    +showTotal(): void
+    ..> SaleableItem : "uses"
+}
+
+Publication <|-- Book
+Publication <|-- Magazine
+Magazine <|-- DiscMag
+Editable <|-- Publication
+Editable <|-- Ticket
+SaleableItem <|-- Pencil
+@enduml
